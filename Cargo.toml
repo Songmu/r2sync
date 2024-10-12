@@ -1,0 +1,18 @@
+[package]
+name = "r2sync"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+aws-config = "0.13"
+aws-sdk-s3 = "0.13"
+aws-smithy-http = "0.43"
+aws-smithy-async = "0.43"
+clap = { version = "4.0", features = ["derive"] }
+env_logger = "0.9"
+reqwest = "0.12.8"
+http = "0.2"
+log = "0.4"
+md5 = "0.7"
+tokio = { version = "1", features = ["full"] }
+url = "2"
