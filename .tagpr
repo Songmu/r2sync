@@ -1,4 +1,4 @@
 [tagpr]
 	vPrefix = false
 	releaseBranch = main
-	versionFile = Cargo.toml
+	versionFile = Cargo.toml,action.yml
