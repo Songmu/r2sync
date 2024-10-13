@@ -4,13 +4,18 @@ inputs:
   tag:
     description: tag name to be released
     default: ''
+  cargo_token:
+    description: cargo token
+    required: true
 runs:
   using: composite
   steps:
   - name: release
     run: |
-      echo "tag: $INPUT_TAG"
+      cargo login "$CARGO_TOKEN"
+      cargo publish
     shell: bash
     env:
       INPUT_TAG: ${{ inputs.tag }}
+      CARGO_TOKEN: ${{ inputs.cargo_token }}
       GITHUB_TOKEN: ${{ github.token }}

@@ -21,4 +21,5 @@ jobs:
     - uses: ./.github/actions/release
       with:
         tag: ${{ steps.tagpr.outputs.tag }}
+        cargo_token: ${{ secrets.CARGO_REGISTRY_TOKEN }}
       if: "steps.tagpr.outputs.tag != ''"
