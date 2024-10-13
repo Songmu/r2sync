@@ -68,4 +68,4 @@ Contributions are welcome! Please submit a pull request or open an issue to disc
 
 ## Contact
 
-For any questions or issues, feel free to open an issue on the [GitHub repository](https://github.com/Songmu/r2sync) or reach out via email at your-email@example.com.
+For any questions or issues, feel free to open an issue on the [GitHub repository](https://github.com/Songmu/r2sync) or reach out via email at y.songmu@gmail.com.
