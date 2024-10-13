@@ -17,3 +17,4 @@ jobs:
     - uses: ./.github/actions/release
       with:
         tag: ${{ github.event.inputs.tag || github.ref }}
+        cargo_token: ${{ secrets.CARGO_REGISTRY_TOKEN }}
