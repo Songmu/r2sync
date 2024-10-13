@@ -1,0 +1,51 @@
+name: r2sync
+description: Sync local directory to Cloudflare R2
+author: Songmu
+inputs:
+  r2_account_id:
+    description: 'R2 Account ID'
+    required: true
+  r2_access_key_id:
+    description: 'R2 Access Key ID'
+    required: true
+  r2_secret_access_key:
+    description: 'R2 Secret Access Key'
+    required: true
+  src:
+    description: 'Source directory'
+    required: true
+  dest:
+    description: 'Destination directory'
+    required: true
+  public_domain:
+    description: 'Public domain'
+    required: false
+  version:
+    description: 'r2sync version'
+    required: false
+    default: "0.0.1"
+runs:
+  using: composite
+  steps:
+  - name: r2sync
+    id: r2sync
+    run: |
+      cd "${GITHUB_WORKSPACE}" || exit 1
+      cargo install r2sync@${R2SYNC_VERSION}
+      public_domain=""
+      if [ -n "$R2SYNC_PUBLIC_DOMAIN" ]; then
+        public_domain="--public-domain $R2SYNC_PUBLIC_DOMAIN"
+      fi
+      r2sync $public_domain "$R2SYNC_SRC" "$R2SYNC_DEST"
+    shell: bash
+    env:
+      R2_ACCOUNT_ID: ${{ inputs.r2_account_id }}
+      R2_ACCESS_KEY_ID: ${{ inputs.r2_access_key_id }}
+      R2_SECRET_ACCESS_KEY: ${{ inputs.r2_secret_access_key }}
+      R2SYNC_SRC: ${{ inputs.src }}
+      R2SYNC_DEST: ${{ inputs.dest }}
+      R2SYNC_PUBLIC_DOMAIN: ${{ inputs.public_domain }}
+      R2SYNC_VERSION: ${{ inputs.version }}
+branding:
+  icon: upload-cloud
+  color: orange
