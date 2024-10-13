@@ -54,8 +54,8 @@ You can provide authentication details via environment variables or a configurat
 
 ```bash
 export R2_ACCOUNT_ID=<your-account-id>
-export R2_ACCESS_KEY=<your-access-key>
-export R2_SECRET_KEY=<your-secret-key>
+export R2_ACCESS_KEY_ID=<your-access-key>
+export R2_SECRET_ACCESS_KEY=<your-secret-key>
 ```
 
 ## License
