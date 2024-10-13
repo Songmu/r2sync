@@ -1,0 +1,19 @@
+name: release r2sync manually or on tag
+on:
+  push:
+    tags:
+    - "v[0-9]+.[0-9]+.[0-9]+"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to release'
+        required: true
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4
+    - uses: ./.github/actions/release
+      with:
+        tag: ${{ github.event.inputs.tag || github.ref }}
