@@ -7,20 +7,17 @@ license = "MIT"
 edition = "2021"
 
 [dependencies]
-async-trait = "0.1"
-aws-config = "0.13"
-aws-sdk-s3 = "0.13"
-aws-smithy-http = "0.43"
-aws-smithy-async = "0.43"
-clap = { version = "4.0", features = ["derive"] }
-env_logger = "0.9"
+async-trait = "0.1.83"
+aws-sdk-s3 = { version = "1.56.0", features = ["behavior-version-latest"] }
+aws-smithy-async = "1.2.1"
+clap = { version = "4.5.20", features = ["derive"] }
+env_logger = "0.11.5"
+log = "0.4.22"
+md5 = "0.7.0"
 reqwest = "0.12.8"
-http = "0.2"
-log = "0.4"
-md5 = "0.7"
-tokio = { version = "1", features = ["full"] }
-url = "2"
+tokio = { version = "1.40.0", features = ["full"] }
+url = "2.5.2"
 
 [dev-dependencies]
-tempfile = "3.3"
-mockall = "0.11"
+tempfile = "3.13.0"
+mockall = "0.13.0"
