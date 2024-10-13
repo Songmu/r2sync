@@ -1,7 +1,7 @@
 use super::utils::R2Location;
 use async_trait::async_trait;
-use aws_sdk_s3::model::ObjectCannedAcl;
-use aws_sdk_s3::types::ByteStream;
+use aws_sdk_s3::primitives::ByteStream;
+use aws_sdk_s3::types::ObjectCannedAcl;
 use aws_sdk_s3::Client;
 use log::info;
 use reqwest::Client as ReqwestClient;
@@ -24,7 +24,7 @@ pub trait R2ClientTrait {
         &self,
         bucket: String,
         prefix: String,
-    ) -> Result<Vec<aws_sdk_s3::model::Object>, Box<dyn Error>>;
+    ) -> Result<Vec<aws_sdk_s3::types::Object>, Box<dyn Error>>;
 }
 
 // R2Client implementation of R2ClientTrait
@@ -55,14 +55,14 @@ impl R2ClientTrait for Client {
         &self,
         bucket: String,
         prefix: String,
-    ) -> Result<Vec<aws_sdk_s3::model::Object>, Box<dyn Error>> {
+    ) -> Result<Vec<aws_sdk_s3::types::Object>, Box<dyn Error>> {
         let resp = self
             .list_objects_v2()
             .bucket(bucket)
             .prefix(prefix)
             .send()
             .await?;
-        Ok(resp.contents().unwrap_or_default().to_vec())
+        Ok(resp.contents().to_vec())
     }
 }
 
@@ -196,8 +196,8 @@ pub async fn sync_r2_to_r2(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use aws_sdk_s3::model::Object;
-    use aws_sdk_s3::types::ByteStream;
+    use aws_sdk_s3::primitives::ByteStream;
+    use aws_sdk_s3::types::Object;
     use mockall::{mock, predicate::*};
     use std::error::Error;
     use tempfile::TempDir;
