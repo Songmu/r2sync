@@ -111,7 +111,7 @@ pub async fn sync_local_to_r2(
                     let md5 = format!("{:x}", md5);
 
                     if etag == md5 && content_length == buffer.len() {
-                        info!("File already exists: {}", key);
+                        info!("Skip identical file: {}", key);
                         continue;
                     }
                 }

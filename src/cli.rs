@@ -13,8 +13,13 @@ use utils::parse_r2_url;
 pub struct Cli {
     #[arg(short, long)]
     pub public_domain: Option<String>,
-    #[arg(short, long)]
-    pub dry_run: bool,
+    // TOOD: Implement these options
+    // #[arg(short, long)]
+    // pub dry_run: bool,
+    // #[arg(short, long)]
+    // pub recursive: bool,
+    // #[arg(short, long)]
+    // pub exclude: Option<Vec<String>>,
     pub source: String,
     pub destination: String,
 }
