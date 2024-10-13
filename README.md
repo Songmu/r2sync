@@ -1,5 +1,13 @@
 # r2sync
 
+[![Test Status](https://github.com/Songmu/r2sync/workflows/Rust/badge.svg)][actions]
+[![License](https://img.shields.io/github/license/Songmu/r2sync)][license]
+[![Crates.io](https://img.shields.io/crates/v/r2sync.svg)](https://crates.io/crates/r2sync)
+[![Documentation](https://docs.rs/r2sync/badge.svg)](https://docs.rs/r2sync)
+
+[actions]: https://githb.com/Songmu/r2sync/actions?workflow=Rust
+[license]: https://github.com/Songmu/r2sync/blob/main/LICENSE
+
 **r2sync** is a command-line tool for synchronizing files between a local directory and Cloudflare R2. It allows seamless syncing of files to and from your R2 bucket.
 
 ## Features
