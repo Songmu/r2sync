@@ -52,11 +52,11 @@ r2sync r2://bucket.example.com/dir ./localdir
 
 ### Full Command Line Options
 
-- `--public-domain`
+- `--public-domain - If a public domain is specified, the remote content is checked before the file is put out, and if it is identical, the put is skipped.
 
 ## Configuration
 
-You can provide authentication details via environment variables or a configuration file.
+You can provide authentication details via environment variables.
 
 ### Environment Variables
 
