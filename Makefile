@@ -4,7 +4,7 @@ credits.html:
 	cargo about generate about.hbs > credits.html
 
 .PHONY: all
-all: clean linux-arm64 linux-amd64
+all: clean linux-arm64 linux-amd64 darwin-arm64 darwin-amd64
 
 .PHONY: linux-arm64
 linux-arm64:
@@ -25,8 +25,20 @@ linux-amd64:
 		  apt-get update && apt-get install -y gcc && \
 		  export RUSTFLAGS='-C strip=symbols' && \
 		  cargo build --release --target x86_64-unknown-linux-gnu && \
-		  mkdir -p dist/r2sync-${ver}-linux-arm64 && \
-		  mv target/x86_64-unknown-linux-gnu/release/r2sync ./dist/r2sync-${ver}-linux-arm64/r2sync"
+		  mkdir -p dist/r2sync-${ver}-linux-amd64 && \
+		  mv target/x86_64-unknown-linux-gnu/release/r2sync ./dist/r2sync-${ver}-linux-amd64/r2sync"
+
+.PHONE: darwin-arm64
+darwin-arm64:
+	cargo build --release --target aarch64-apple-darwin
+	mkdir -p dist/r2sync-${ver}-darwin-arm64
+	mv target/aarch64-apple-darwin/release/r2sync ./dist/r2sync-${ver}-darwin-arm64/r2sync
+
+.PHONE: darwin-amd64
+darwin-amd64:
+	cargo build --release --target x86_64-apple-darwin
+	mkdir -p dist/r2sync-${ver}-darwin-amd64
+	mv target/x86_64-apple-darwin/release/r2sync ./dist/r2sync-${ver}-darwin-amd64/r2sync
 
 .PHONY: clean
 clean:
