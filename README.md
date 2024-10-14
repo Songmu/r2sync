@@ -17,18 +17,22 @@
 
 ## Installation
 
-To install `r2sync`, ensure you have [Rust](https://www.rust-lang.org/) installed, and then run:
+```console
+$ brew install Songmu/tap/r2sync
+```
 
-```bash
-cargo install r2sync
+You can build and install the latest version from the source code. Ensure you have [Rust](https://www.rust-lang.org/) installed, and then run:
+
+```console
+$ cargo install r2sync
 ```
 
 Alternatively, you can clone the repository and build the project locally:
 
 ```bash
-git clone https://github.com/Songmu/r2sync.git
-cd r2sync
-cargo build --release
+$ git clone https://github.com/Songmu/r2sync.git
+$ cd r2sync
+$ cargo build --release
 ```
 
 ## Usage
