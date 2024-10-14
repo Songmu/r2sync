@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.0.3](https://github.com/Songmu/r2sync/compare/v0.0.2...v0.0.3) - 2024-10-14
+- introduce cargo-about by @Songmu in https://github.com/Songmu/r2sync/pull/13
+- add crossbuild tasks in Makefile by @Songmu in https://github.com/Songmu/r2sync/pull/14
+- add install.sh by @Songmu in https://github.com/Songmu/r2sync/pull/15
+- fix action.yml to use install.sh by @Songmu in https://github.com/Songmu/r2sync/pull/16
+
 ## [v0.0.2](https://github.com/Songmu/r2sync/compare/v0.0.1...v0.0.2) - 2024-10-14
 - update README.md by @Songmu in https://github.com/Songmu/r2sync/pull/6
 - add github actions by @Songmu in https://github.com/Songmu/r2sync/pull/8
