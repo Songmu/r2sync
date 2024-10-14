@@ -8,6 +8,9 @@ credits.html:
 all: clean linux-arm64 linux-amd64 darwin-arm64 darwin-amd64
 	./author/dist.sh
 
+upload: all
+	ghr ${ver} dist/
+
 .PHONY: linux-arm64
 linux-arm64:
 	docker run --rm --platform linux/arm64 -v "$(PWD)":/home/rust/src -w /home/rust/src rust:latest \
