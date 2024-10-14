@@ -9,7 +9,7 @@ all: clean linux-arm64 linux-amd64 darwin-arm64 darwin-amd64
 	./author/dist.sh
 
 upload: all
-	ghr ${ver} dist/
+	env GITHUB_TOKEN=$$(gh auth token) ghr ${ver} dist/
 
 .PHONY: linux-arm64
 linux-arm64:
