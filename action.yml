@@ -33,7 +33,7 @@ runs:
       cd "${GITHUB_WORKSPACE}" || exit 1
 
       TEMP_PATH="$(mktemp -d)"
-      curl -sfL https://raw.githubusercontent.com/Songmu/r2sync/main/install.sh | sh -s -- -b "${TEMP_PATH}" "$R2SYNC_VERSION" 2>&1
+      curl -sfL https://raw.githubusercontent.com/Songmu/r2sync/main/install.sh | sh -s -- -b "${TEMP_PATH}" v"$R2SYNC_VERSION" 2>&1
       sudo install -m 0755 "${TEMP_PATH}/r2sync" /usr/local/bin/r2sync
       rm -rf "${TEMP_PATH}"
 
