@@ -6,6 +6,7 @@ credits.html:
 
 .PHONY: all
 all: clean linux-arm64 linux-amd64 darwin-arm64 darwin-amd64
+	./author/dist.sh
 
 .PHONY: linux-arm64
 linux-arm64:
