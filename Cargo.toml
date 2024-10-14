@@ -6,6 +6,10 @@ authors = ["Masayuki Matsuki <y.songmu@gmail.com>"]
 license = "MIT"
 edition = "2021"
 
+[[bin]]
+name = "r2sync"
+path = "src/main.rs"
+
 [dependencies]
 async-trait = "0.1.83"
 aws-sdk-s3 = { version = "1.56.0", features = ["behavior-version-latest"] }
