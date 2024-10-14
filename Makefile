@@ -8,7 +8,7 @@ all: clean linux-arm64 linux-amd64 darwin-arm64 darwin-amd64
 
 .PHONY: linux-arm64
 linux-arm64:
-	docker run --rm -v "$(PWD)":/home/rust/src -w /home/rust/src rust:latest \
+	docker run --rm --platform linux/arm64 -v "$(PWD)":/home/rust/src -w /home/rust/src rust:latest \
 		sh -c "\
 		  rustup target add aarch64-unknown-linux-gnu && \
 		  apt-get update && apt-get install -y gcc-aarch64-linux-gnu && \
