@@ -19,6 +19,3 @@ runs:
       INPUT_TAG: ${{ inputs.tag }}
       CARGO_TOKEN: ${{ inputs.cargo_token }}
       GITHUB_TOKEN: ${{ github.token }}
-  - uses: haya14busa/action-update-semver@v1
-    with:
-      major_version_tag_only: true

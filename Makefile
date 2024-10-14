@@ -8,8 +8,14 @@ credits.html:
 all: clean linux-arm64 linux-amd64 darwin-arm64 darwin-amd64
 	./author/dist.sh
 
+.PHONY: upload
 upload: all
 	env GITHUB_TOKEN=$$(gh auth token) ghr ${ver} dist/
+
+.PHONY: release
+release: upload
+	git tag -fa v0 -m "Release v0"
+	git push origin v0 --force
 
 .PHONY: linux-arm64
 linux-arm64:
