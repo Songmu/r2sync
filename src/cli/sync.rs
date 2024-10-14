@@ -12,6 +12,11 @@ pub struct ObjectOutput {
     body: ByteStream,
 }
 
+pub struct HeadObjectOutput {
+    etag: String,
+    content_length: i64,
+}
+
 // R2ClientTrait definition
 #[async_trait]
 pub trait R2ClientTrait {
@@ -24,6 +29,12 @@ pub trait R2ClientTrait {
 
     async fn get_object(&self, bucket: String, key: String)
         -> Result<ObjectOutput, Box<dyn Error>>;
+
+    async fn head_object(
+        &self,
+        bucket: String,
+        key: String,
+    ) -> Result<HeadObjectOutput, Box<dyn Error>>;
 
     async fn list_objects(
         &self,
@@ -58,6 +69,18 @@ impl R2ClientTrait for Client {
     ) -> Result<ObjectOutput, Box<dyn Error>> {
         let resp = self.get_object().bucket(bucket).key(key).send().await?;
         Ok(ObjectOutput { body: resp.body })
+    }
+
+    async fn head_object(
+        &self,
+        bucket: String,
+        key: String,
+    ) -> Result<HeadObjectOutput, Box<dyn Error>> {
+        let resp = self.head_object().bucket(bucket).key(key).send().await?;
+        Ok(HeadObjectOutput {
+            etag: resp.e_tag.unwrap(),
+            content_length: resp.content_length.unwrap(),
+        })
     }
 
     async fn list_objects(
@@ -120,6 +143,21 @@ pub async fn sync_local_to_r2(
                     let md5 = format!("{:x}", md5);
 
                     if etag == md5 && content_length == buffer.len() {
+                        info!("Skip identical file: {}", key);
+                        continue;
+                    }
+                }
+            } else {
+                let head_resp = client
+                    .head_object(bucket_name.to_string(), key.clone())
+                    .await;
+
+                if let Ok(head_resp) = head_resp {
+                    let md5 = md5::compute(&buffer);
+                    let md5 = format!("{:x}", md5);
+                    let etag = head_resp.etag.trim_matches('"');
+
+                    if etag == md5 && head_resp.content_length == buffer.len() as i64 {
                         info!("Skip identical file: {}", key);
                         continue;
                     }
@@ -231,6 +269,12 @@ mod tests {
                 key: String,
             ) -> Result<ObjectOutput, Box<dyn Error>>;
 
+            async fn head_object(
+                &self,
+                bucket: String,
+                key: String,
+            ) -> Result<HeadObjectOutput, Box<dyn Error>>;
+
             async fn list_objects(
                 &self,
                 bucket: String,
@@ -255,6 +299,19 @@ mod tests {
                 eq(b"test data".to_vec()),
             )
             .returning(|_, _, _| Ok(()));
+
+        client
+            .expect_head_object()
+            .with(
+                eq("test-bucket".to_string()),
+                eq("test-prefix/file1.txt".to_string()),
+            )
+            .returning(|_, _| {
+                Ok(HeadObjectOutput {
+                    etag: "d8e8fca2dc0f896fd7cb4cb0031ba249".to_string(),
+                    content_length: 9,
+                })
+            });
 
         let mut file = File::create(file_path).await.unwrap();
         file.write_all(b"test data").await.unwrap();
