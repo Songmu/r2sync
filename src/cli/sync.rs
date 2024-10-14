@@ -8,6 +8,10 @@ use reqwest::Client as ReqwestClient;
 use std::error::Error;
 use tokio::io::AsyncReadExt;
 
+pub struct ObjectOutput {
+    body: ByteStream,
+}
+
 // R2ClientTrait definition
 #[async_trait]
 pub trait R2ClientTrait {
@@ -18,7 +22,8 @@ pub trait R2ClientTrait {
         body: Vec<u8>,
     ) -> Result<(), Box<dyn Error>>;
 
-    async fn get_object(&self, bucket: String, key: String) -> Result<ByteStream, Box<dyn Error>>;
+    async fn get_object(&self, bucket: String, key: String)
+        -> Result<ObjectOutput, Box<dyn Error>>;
 
     async fn list_objects(
         &self,
@@ -46,9 +51,13 @@ impl R2ClientTrait for Client {
         Ok(())
     }
 
-    async fn get_object(&self, bucket: String, key: String) -> Result<ByteStream, Box<dyn Error>> {
+    async fn get_object(
+        &self,
+        bucket: String,
+        key: String,
+    ) -> Result<ObjectOutput, Box<dyn Error>> {
         let resp = self.get_object().bucket(bucket).key(key).send().await?;
-        Ok(resp.body)
+        Ok(ObjectOutput { body: resp.body })
     }
 
     async fn list_objects(
@@ -146,7 +155,7 @@ pub async fn sync_r2_to_local(
             .await?;
 
         let mut file = tokio::fs::File::create(&local_path).await?;
-        let mut stream = resp.into_async_read();
+        let mut stream = resp.body.into_async_read();
         tokio::io::copy(&mut stream, &mut file).await?;
 
         info!("Downloaded: {}", local_path);
@@ -183,7 +192,7 @@ pub async fn sync_r2_to_r2(
             .get_object(src.bucket.clone(), src_key.to_string())
             .await?;
 
-        let body = resp.collect().await?.into_bytes().to_vec();
+        let body = resp.body.collect().await?.into_bytes().to_vec();
 
         client
             .put_object(dest.bucket.clone(), dest_key.clone(), body.clone())
@@ -220,7 +229,7 @@ mod tests {
                 &self,
                 bucket: String,
                 key: String,
-            ) -> Result<ByteStream, Box<dyn Error>>;
+            ) -> Result<ObjectOutput, Box<dyn Error>>;
 
             async fn list_objects(
                 &self,
@@ -280,7 +289,11 @@ mod tests {
                 eq("test-bucket".to_string()),
                 eq("test-prefix/file1.txt".to_string()),
             )
-            .returning(|_, _| Ok(ByteStream::from_static(b"test data")));
+            .returning(|_, _| {
+                Ok(ObjectOutput {
+                    body: ByteStream::from_static(b"test data"),
+                })
+            });
 
         let temp_dir = TempDir::new().expect("Failed to create temp dir");
         let file_path = temp_dir.path().join("file1.txt");
@@ -318,7 +331,11 @@ mod tests {
                 eq("src-bucket".to_string()),
                 eq("test-prefix/file1.txt".to_string()),
             )
-            .returning(|_, _| Ok(ByteStream::from_static(b"test data")));
+            .returning(|_, _| {
+                Ok(ObjectOutput {
+                    body: ByteStream::from_static(b"test data"),
+                })
+            });
 
         client
             .expect_put_object()
