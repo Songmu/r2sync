@@ -53,7 +53,7 @@ r2sync r2://bucket.example.com/dir ./localdir
 
 ### Full Command Line Options
 
-- `--public-domain - If a public domain is specified, the remote content is checked before the file is put out, and if it is identical, the put is skipped.
+- `--public-domain`: If a public domain is specified, the remote content is checked before the file is put out, and if it is identical, the put is skipped.
 
 ## Configuration
 
