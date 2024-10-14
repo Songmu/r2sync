@@ -14,7 +14,7 @@ for dir in $(\ls $dist); do
   done
 
   if [[ "$dir" == *"linux"* ]]; then
-    sh -c "cd $dist && tar -czvf $dir.tar.gz $dir"
+    sh -c "cd $dist && tar --format ustar -czvf $dir.tar.gz $dir"
   else
     sh -c "cd $dist && zip -r $dir.zip $dir"
   fi
