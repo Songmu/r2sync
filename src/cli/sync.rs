@@ -8,6 +8,15 @@ use reqwest::Client as ReqwestClient;
 use std::error::Error;
 use tokio::io::AsyncReadExt;
 
+pub struct ObjectOutput {
+    body: ByteStream,
+}
+
+pub struct HeadObjectOutput {
+    etag: String,
+    content_length: i64,
+}
+
 // R2ClientTrait definition
 #[async_trait]
 pub trait R2ClientTrait {
@@ -18,7 +27,14 @@ pub trait R2ClientTrait {
         body: Vec<u8>,
     ) -> Result<(), Box<dyn Error>>;
 
-    async fn get_object(&self, bucket: String, key: String) -> Result<ByteStream, Box<dyn Error>>;
+    async fn get_object(&self, bucket: String, key: String)
+        -> Result<ObjectOutput, Box<dyn Error>>;
+
+    async fn head_object(
+        &self,
+        bucket: String,
+        key: String,
+    ) -> Result<HeadObjectOutput, Box<dyn Error>>;
 
     async fn list_objects(
         &self,
@@ -46,9 +62,25 @@ impl R2ClientTrait for Client {
         Ok(())
     }
 
-    async fn get_object(&self, bucket: String, key: String) -> Result<ByteStream, Box<dyn Error>> {
+    async fn get_object(
+        &self,
+        bucket: String,
+        key: String,
+    ) -> Result<ObjectOutput, Box<dyn Error>> {
         let resp = self.get_object().bucket(bucket).key(key).send().await?;
-        Ok(resp.body)
+        Ok(ObjectOutput { body: resp.body })
+    }
+
+    async fn head_object(
+        &self,
+        bucket: String,
+        key: String,
+    ) -> Result<HeadObjectOutput, Box<dyn Error>> {
+        let resp = self.head_object().bucket(bucket).key(key).send().await?;
+        Ok(HeadObjectOutput {
+            etag: resp.e_tag.unwrap(),
+            content_length: resp.content_length.unwrap(),
+        })
     }
 
     async fn list_objects(
@@ -115,6 +147,21 @@ pub async fn sync_local_to_r2(
                         continue;
                     }
                 }
+            } else {
+                let head_resp = client
+                    .head_object(bucket_name.to_string(), key.clone())
+                    .await;
+
+                if let Ok(head_resp) = head_resp {
+                    let md5 = md5::compute(&buffer);
+                    let md5 = format!("{:x}", md5);
+                    let etag = head_resp.etag.trim_matches('"');
+
+                    if etag == md5 && head_resp.content_length == buffer.len() as i64 {
+                        info!("Skip identical file: {}", key);
+                        continue;
+                    }
+                }
             }
 
             client
@@ -146,7 +193,7 @@ pub async fn sync_r2_to_local(
             .await?;
 
         let mut file = tokio::fs::File::create(&local_path).await?;
-        let mut stream = resp.into_async_read();
+        let mut stream = resp.body.into_async_read();
         tokio::io::copy(&mut stream, &mut file).await?;
 
         info!("Downloaded: {}", local_path);
@@ -183,7 +230,7 @@ pub async fn sync_r2_to_r2(
             .get_object(src.bucket.clone(), src_key.to_string())
             .await?;
 
-        let body = resp.collect().await?.into_bytes().to_vec();
+        let body = resp.body.collect().await?.into_bytes().to_vec();
 
         client
             .put_object(dest.bucket.clone(), dest_key.clone(), body.clone())
@@ -220,7 +267,13 @@ mod tests {
                 &self,
                 bucket: String,
                 key: String,
-            ) -> Result<ByteStream, Box<dyn Error>>;
+            ) -> Result<ObjectOutput, Box<dyn Error>>;
+
+            async fn head_object(
+                &self,
+                bucket: String,
+                key: String,
+            ) -> Result<HeadObjectOutput, Box<dyn Error>>;
 
             async fn list_objects(
                 &self,
@@ -246,6 +299,19 @@ mod tests {
                 eq(b"test data".to_vec()),
             )
             .returning(|_, _, _| Ok(()));
+
+        client
+            .expect_head_object()
+            .with(
+                eq("test-bucket".to_string()),
+                eq("test-prefix/file1.txt".to_string()),
+            )
+            .returning(|_, _| {
+                Ok(HeadObjectOutput {
+                    etag: "d8e8fca2dc0f896fd7cb4cb0031ba249".to_string(),
+                    content_length: 9,
+                })
+            });
 
         let mut file = File::create(file_path).await.unwrap();
         file.write_all(b"test data").await.unwrap();
@@ -280,7 +346,11 @@ mod tests {
                 eq("test-bucket".to_string()),
                 eq("test-prefix/file1.txt".to_string()),
             )
-            .returning(|_, _| Ok(ByteStream::from_static(b"test data")));
+            .returning(|_, _| {
+                Ok(ObjectOutput {
+                    body: ByteStream::from_static(b"test data"),
+                })
+            });
 
         let temp_dir = TempDir::new().expect("Failed to create temp dir");
         let file_path = temp_dir.path().join("file1.txt");
@@ -318,7 +388,11 @@ mod tests {
                 eq("src-bucket".to_string()),
                 eq("test-prefix/file1.txt".to_string()),
             )
-            .returning(|_, _| Ok(ByteStream::from_static(b"test data")));
+            .returning(|_, _| {
+                Ok(ObjectOutput {
+                    body: ByteStream::from_static(b"test data"),
+                })
+            });
 
         client
             .expect_put_object()

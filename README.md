@@ -13,6 +13,7 @@
 ## Features
 
 - Sync local directories with Cloudflare R2 buckets.
+- For efficient sync, look at the eTag and content length of the remote file and skip the put appropriately.
 
 ## Installation
 
