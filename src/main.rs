@@ -12,7 +12,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     match Cli::parse_args()?.run().await {
         Ok(_) => Ok(()),
         Err(e) => {
-            error!("Error: {}", e);
+            error!("Error: {:?}", e);
             std::process::exit(1);
         }
     }
