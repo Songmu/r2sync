@@ -3,8 +3,12 @@ name = "r2sync"
 version = "0.0.4"
 description = "cli for synchronizing files between a local directory and Cloudflare R2"
 authors = ["Masayuki Matsuki <y.songmu@gmail.com>"]
+categories = ["command-line-utilities"]
 license = "MIT"
 edition = "2021"
+exclude = ["Makefile", "author/*"]
+rust-version = "1.82.0"
+repository = "https://github.com/Songmu/r2sync"
 
 [[bin]]
 name = "r2sync"
