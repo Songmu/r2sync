@@ -3,8 +3,11 @@ name = "r2sync"
 version = "0.0.4"
 description = "cli for synchronizing files between a local directory and Cloudflare R2"
 authors = ["Masayuki Matsuki <y.songmu@gmail.com>"]
+categories = ["command-line-utilities"]
 license = "MIT"
 edition = "2021"
+exclude = ["Makefile", "author/*"]
+repository = "https://github.com/Songmu/r2sync"
 
 [[bin]]
 name = "r2sync"
@@ -12,7 +15,7 @@ path = "src/main.rs"
 
 [dependencies]
 async-trait = "0.1.83"
-aws-sdk-s3 = { version = "1.56.0", features = ["behavior-version-latest"] }
+aws-sdk-s3 = { version = "1.57.0", features = ["behavior-version-latest"] }
 aws-smithy-async = "1.2.1"
 clap = { version = "4.5.20", features = ["derive"] }
 env_logger = "0.11.5"
