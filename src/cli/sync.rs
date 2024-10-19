@@ -1,7 +1,6 @@
 use super::utils::R2Location;
 use async_trait::async_trait;
 use aws_sdk_s3::primitives::ByteStream;
-use aws_sdk_s3::types::ObjectCannedAcl;
 use aws_sdk_s3::Client;
 use log::info;
 use reqwest::Client as ReqwestClient;
@@ -56,7 +55,6 @@ impl R2ClientTrait for Client {
             .bucket(bucket)
             .key(key)
             .body(body.into())
-            .acl(ObjectCannedAcl::Private)
             .send()
             .await?;
         Ok(())
