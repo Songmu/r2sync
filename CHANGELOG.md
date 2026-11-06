@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.0.6](https://github.com/Songmu/r2sync/compare/v0.0.5...v0.0.6) - 2026-11-06
+
+- fix: update Cargo.lock during tagpr release preparation by @Songmu in https://github.com/Songmu/r2sync/pull/26
+
 ## [v0.0.5](https://github.com/Songmu/r2sync/compare/v0.0.4...v0.0.5) - 2026-11-06
 
 - remove useless acl settings by @Songmu in https://github.com/Songmu/r2sync/pull/20
