@@ -1,6 +1,6 @@
 [package]
 name = "r2sync"
-version = "0.0.4"
+version = "0.0.5"
 description = "cli for synchronizing files between a local directory and Cloudflare R2"
 authors = ["Masayuki Matsuki <y.songmu@gmail.com>"]
 categories = ["command-line-utilities"]

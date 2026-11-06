@@ -1,5 +1,12 @@
 # Changelog
 
+## [v0.0.5](https://github.com/Songmu/r2sync/compare/v0.0.4...v0.0.5) - 2026-11-06
+
+- remove useless acl settings by @Songmu in https://github.com/Songmu/r2sync/pull/20
+- update Cargo.toml by @Songmu in https://github.com/Songmu/r2sync/pull/22
+- chore: update dependencies and enable Dependabot by @Songmu in https://github.com/Songmu/r2sync/pull/24
+- ci: satisfy ghalint and introduce an Actions lockfile by @Songmu in https://github.com/Songmu/r2sync/pull/25
+
 ## [v0.0.4](https://github.com/Songmu/r2sync/compare/v0.0.3...v0.0.4) - 2024-10-15
 - add bin section into Cargo.toml by @Songmu in https://github.com/Songmu/r2sync/pull/18
 - display precise error by @Songmu in https://github.com/Songmu/r2sync/pull/19
