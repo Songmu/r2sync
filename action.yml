@@ -23,7 +23,7 @@ inputs:
   version:
     description: 'r2sync version'
     required: false
-    default: "0.0.6"
+    default: "0.0.7"
 runs:
   using: composite
   steps:
