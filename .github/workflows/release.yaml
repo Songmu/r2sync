@@ -11,10 +11,15 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
     steps:
     - name: checkout
-      uses: actions/checkout@v7
-    - uses: ./.github/actions/release
+      uses: actions/checkout@v7.0.1
+      with:
+        persist-credentials: false
+    - uses: $/.github/actions/release
       with:
         tag: ${{ github.event.inputs.tag || github.ref }}
         cargo_token: ${{ secrets.CARGO_REGISTRY_TOKEN }}
