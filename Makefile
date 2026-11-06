@@ -1,5 +1,5 @@
 name = r2sync
-ver = v0.0.7
+ver = v0.0.8
 
 credits.html:
 	cargo about generate about.hbs > credits.html
