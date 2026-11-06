@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.0.8](https://github.com/Songmu/r2sync/compare/v0.0.7...v0.0.8) - 2026-11-06
+
+- ci: automate attested binary releases after tagpr by @Songmu in https://github.com/Songmu/r2sync/pull/30
+
 ## [v0.0.7](https://github.com/Songmu/r2sync/compare/v0.0.6...v0.0.7) - 2026-11-06
 
 - fix: allow dependency licenses needed for release credits by @Songmu in https://github.com/Songmu/r2sync/pull/28
